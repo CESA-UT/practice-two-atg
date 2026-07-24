@@ -6,6 +6,7 @@ class Plant:
 
     def take_damage(self, damage):
         self.health -= damage
+        print("Plant health:", self.health)
 
         if self.health <= 0:
             self.destroy()

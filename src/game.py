@@ -3,6 +3,7 @@ import pygame
 from settings import WIDTH, HEIGHT, FPS, TITLE
 from plants.peashooter import Peashooter
 from zombies.normal_zombie import NormalZombie
+from systems.collision import Collision
 
 
 
@@ -52,8 +53,18 @@ class Game:
 
 
     def update(self):
-         for zombie in self.zombies:
-            zombie.move()
+        for zombie in self.zombies:
+
+            attacking = False
+
+            for plant in self.plants:
+
+                if Collision.zombie_plant(zombie, plant):
+                    zombie.attack(plant)
+                    attacking = True
+
+            if not attacking:
+                zombie.move()
         
 
 
