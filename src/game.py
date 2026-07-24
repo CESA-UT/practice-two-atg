@@ -2,6 +2,7 @@ import pygame
 
 from settings import WIDTH, HEIGHT, FPS, TITLE
 from plants.peashooter import Peashooter
+from zombies.normal_zombie import NormalZombie
 
 
 
@@ -25,7 +26,11 @@ class Game:
         self.plants.append(
              Peashooter(150, 300)
 )
+        self.zombies = []
 
+        self.zombies.append(
+            NormalZombie(750, 300)
+)
 
     def run(self):
         while self.running:
@@ -54,5 +59,6 @@ class Game:
         self.screen.fill((50, 150, 50))
         for plant in self.plants:
                 plant.draw(self.screen)
-                
+        for zombie in self.zombies:
+                zombie.draw(self.screen)
         pygame.display.update()
