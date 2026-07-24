@@ -52,7 +52,9 @@ class Game:
 
 
     def update(self):
-        pass
+         for zombie in self.zombies:
+            zombie.move()
+        
 
 
     def draw(self):
