@@ -9,4 +9,4 @@ class HUD:
         print("+----------------------------------------+")
 
     def update_wave(self, new_wave):
-        self.wave_number = new_wav
+        self.wave_number = new_wave
