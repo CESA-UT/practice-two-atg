@@ -4,6 +4,7 @@ from settings import WIDTH, HEIGHT, FPS, TITLE
 from plants.peashooter import Peashooter
 from zombies.normal_zombie import NormalZombie
 from systems.collision import Collision
+from entities.projectile import Projectile
 
 
 
@@ -31,6 +32,16 @@ class Game:
 
         self.zombies.append(
             NormalZombie(750, 300)
+)
+        self.projectiles = []
+
+        self.projectiles.append(
+            Projectile(
+            170,
+            300,
+            5,
+            20
+    )
 )
 
     def run(self):
@@ -65,6 +76,18 @@ class Game:
 
             if not attacking:
                 zombie.move()
+
+        for projectile in self.projectiles:
+            projectile.move()
+        for projectile in self.projectiles:
+            for zombie in self.zombies:
+                Collision.projectile_zombie(projectile, zombie)
+                
+        self.projectiles = [
+            projectile
+            for projectile in self.projectiles
+            if projectile.active
+]                 
         
 
 
@@ -74,4 +97,6 @@ class Game:
                 plant.draw(self.screen)
         for zombie in self.zombies:
                 zombie.draw(self.screen)
+        for projectile in self.projectiles:
+            projectile.draw(self.screen)
         pygame.display.update()
