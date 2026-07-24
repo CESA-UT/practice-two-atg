@@ -5,6 +5,7 @@ class Zombie:
         self.health = health
         self.speed = speed
         self.damage = damage
+        self.alive = True
 
     def move(self):
         self.x -= self.speed
@@ -19,6 +20,7 @@ class Zombie:
         plant.take_damage(self.damage)
 
     def destroy(self):
+        self.alive = False
         pass
     
     def draw(self, screen):

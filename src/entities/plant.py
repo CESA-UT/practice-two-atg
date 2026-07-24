@@ -3,6 +3,7 @@ class Plant:
         self.x = x
         self.y = y
         self.health = health
+        self.alive = True
 
     def take_damage(self, damage):
         self.health -= damage
@@ -11,6 +12,7 @@ class Plant:
             self.destroy()
 
     def destroy(self):
+        self.alive = False
         pass
 
     def draw(self, screen):

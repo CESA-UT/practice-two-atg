@@ -28,21 +28,16 @@ class Game:
         self.plants.append(
              Peashooter(150, 300)
 )
+        
         self.zombies = []
 
         self.zombies.append(
             NormalZombie(750, 300)
 )
         self.projectiles = []
+        
+        
 
-        self.projectiles.append(
-            Projectile(
-            170,
-            300,
-            5,
-            20
-    )
-)
 
     def run(self):
         while self.running:
@@ -64,6 +59,15 @@ class Game:
 
 
     def update(self):
+        for plant in self.plants:
+
+            plant.update()
+
+            projectile = plant.shoot()
+
+            if projectile:
+                self.projectiles.append(projectile)
+
         for zombie in self.zombies:
 
             attacking = False
@@ -82,12 +86,23 @@ class Game:
         for projectile in self.projectiles:
             for zombie in self.zombies:
                 Collision.projectile_zombie(projectile, zombie)
-                
+
         self.projectiles = [
             projectile
             for projectile in self.projectiles
             if projectile.active
-]                 
+]
+        self.zombies = [
+            zombie
+            for zombie in self.zombies
+            if zombie.alive
+]
+
+        self.plants = [
+            plant
+            for plant in self.plants
+            if plant.alive
+]               
         
 
 
