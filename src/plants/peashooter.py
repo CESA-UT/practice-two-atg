@@ -8,10 +8,15 @@ class Peashooter(Plant):
 
         self.shoot_cooldown = 60
 
-    def shoot(self):
-        if self.shoot_cooldown == 0:
+    def can_shoot(self, zombies):
+        for zombie in zombies:
+            if zombie.alive and zombie.x > self.x and abs(zombie.y - self.y) < 20:
+                return True
+        return False
 
-            self.shoot_cooldown = 6
+    def shoot(self, zombies):
+        if self.shoot_cooldown == 0 and self.can_shoot(zombies):
+            self.shoot_cooldown = 60
 
             return Projectile(
                 self.x,
