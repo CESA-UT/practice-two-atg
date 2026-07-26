@@ -1,0 +1,8 @@
+WIDTH = 1000
+HEIGHT = 600
+FPS = 60
+TITLE = "Plants vs Zombies"
+
+NUM_ROWS = 5
+NUM_COLS = 9
+ROW_Y_POSITIONS = [120, 200, 280, 360, 440]
