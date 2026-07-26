@@ -5,7 +5,7 @@ class UI:
         self.cards = [
             PlantCard("Peashooter", 100, 5),
             PlantCard("Sunflower", 50, 3),
-            PlantCard("Wall-nut", 50, 15)
+            PlantCard("WallNut", 50, 15)
         ]
 
     def display_ui(self):
