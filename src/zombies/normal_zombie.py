@@ -8,5 +8,5 @@ class NormalZombie(Zombie):
             row=row,
             health=100,  
             speed=1,     
-            damage=10    
+            damage=20    
         )

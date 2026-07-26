@@ -1,3 +1,4 @@
+import pygame
 from entities.plant import Plant
 
 
@@ -17,3 +18,9 @@ class Sunflower(Plant):
             self.sun_timer = 0
             return self.sun_amount
         return 0
+
+    def draw(self, surface):
+        # رسم دایره زرد برای آفتابگردان
+        pygame.draw.circle(surface, (255, 255, 0), (int(self.x), int(self.y)), 25)
+        # حاشیه زرد تیره‌تر برای نمای بهتر
+        pygame.draw.circle(surface, (210, 180, 0), (int(self.x), int(self.y)), 25, 2)
