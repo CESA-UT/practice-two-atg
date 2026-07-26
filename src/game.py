@@ -2,6 +2,7 @@ import pygame
 
 from settings import WIDTH, HEIGHT, FPS, TITLE
 from plants.peashooter import Peashooter
+from plants.sunflower import Sunflower
 from zombies.normal_zombie import NormalZombie
 from systems.collision import Collision
 from systems.wave_manager import WaveManager
@@ -22,15 +23,20 @@ class Game:
 
         self.plants = [
             Peashooter(150, self.row_y[0], row=0),
+            Sunflower(150, self.row_y[1], row=1),
             Peashooter(150, self.row_y[2], row=2)
         ]
         self.zombies = []
         self.projectiles = []
         self.wave_manager = WaveManager(spawn_x=WIDTH, row_y_positions=self.row_y)
 
+        self.sun_score = 150
+        self.sun_font = pygame.font.Font(None, 36)
+
         self.game_over = False
         self.game_won = False
         self.font = pygame.font.Font(None, 80)
+        self.banner_font = pygame.font.Font(None, 52)
 
     def run(self):
         while self.running:
@@ -60,6 +66,10 @@ class Game:
             projectile = plant.shoot(self.zombies) if hasattr(plant, 'shoot') else None
             if projectile is not None:
                 self.projectiles.append(projectile)
+
+            if hasattr(plant, 'generate_sun'):
+                added_sun = plant.generate_sun()
+                self.sun_score += added_sun
 
         for zombie in self.zombies:
             attacking = False
@@ -102,6 +112,15 @@ class Game:
 
         for projectile in self.projectiles:
             projectile.draw(self.screen)
+
+        sun_text = self.sun_font.render(f"Sun: {self.sun_score}", True, (255, 255, 255))
+        self.screen.blit(sun_text, (20, 20))
+
+        if self.wave_manager.banner_text != "":
+            banner_surface = self.banner_font.render(self.wave_manager.banner_text, True, (255, 255, 0))
+            center_y = HEIGHT // 2 if self.wave_manager.phase == "game_start" else 80
+            banner_rect = banner_surface.get_rect(center=(WIDTH // 2, center_y))
+            self.screen.blit(banner_surface, banner_rect)
 
         if self.game_over:
             text_surface = self.font.render("GAME OVER", True, (200, 0, 0))
