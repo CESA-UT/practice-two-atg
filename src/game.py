@@ -3,6 +3,7 @@ import pygame
 from settings import WIDTH, HEIGHT, FPS, TITLE
 from plants.peashooter import Peashooter
 from plants.sunflower import Sunflower
+from plants.wallnut import WallNut
 from zombies.normal_zombie import NormalZombie
 from systems.collision import Collision
 from systems.wave_manager import WaveManager
@@ -21,19 +22,19 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        # تنظیمات شبکه زمین بازی (جابه‌جایی به پایین‌تر برای باز شدن فضای HUD)
+        # تنظیمات شبکه زمین بازی
         self.grid_start_x = 100  
         self.cell_width = 80     
         self.cols = 9            
         self.rows = 5            
-        # ردیف‌ها از Y=160 شروع می‌شوند تا با نوار کارت‌ها تداخل نداشته باشند
         self.row_y = [160, 240, 320, 400, 480]  
 
-        # ساخت برد و کارت‌ها
+        # ساخت برد و کارت‌ها (اضافه شدن کارت گردو به عنوان کارت سوم)
         self.board = Board(rows=self.rows, cols=self.cols)
         self.cards = [
             PlantCard(plant_name="peashooter", cost=100, recharge_time=5.0),
-            PlantCard(plant_name="sunflower", cost=50, recharge_time=7.5)
+            PlantCard(plant_name="sunflower", cost=50, recharge_time=7.5),
+            PlantCard(plant_name="wallnut", cost=50, recharge_time=15.0)
         ]
         self.selected_card = None
 
@@ -44,7 +45,7 @@ class Game:
 
         self.sun_score = 150
         
-        # تعریف فونت اختصاصی کوچک‌تر برای داخل کارت‌ها
+        # تعریف فونت‌ها
         self.sun_font = pygame.font.Font(None, 36)
         self.card_font = pygame.font.Font(None, 22)
         self.font = pygame.font.Font(None, 80)
@@ -59,6 +60,8 @@ class Game:
                 new_plant = Peashooter(x, y, row=row)
             elif plant_type == "sunflower":
                 new_plant = Sunflower(x, y, row=row)
+            elif plant_type == "wallnut":
+                new_plant = WallNut(x, y, row=row)
             else:
                 return False
 
@@ -89,14 +92,16 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = event.pos
 
-                # ۱. انتخاب کارت از نوار بالای صفحه (ارتفاع ۱1۰ پیکسل اول)
+                # ۱. انتخاب کارت از نوار بالای صفحه
                 if mouse_y <= 110:
                     if 140 <= mouse_x <= 220:
                         self.selected_card = self.cards[0]  # Peashooter
                     elif 230 <= mouse_x <= 310:
                         self.selected_card = self.cards[1]  # Sunflower
+                    elif 320 <= mouse_x <= 400:
+                        self.selected_card = self.cards[2]  # WallNut
 
-                # ۲. محاسبه دقیق ردیف و ستون کلیک‌شده روی زمین
+                # ۲. کاشت روی زمین
                 elif self.selected_card is not None:
                     chosen_col = -1
                     if self.grid_start_x <= mouse_x < self.grid_start_x + (self.cols * self.cell_width):
@@ -193,7 +198,6 @@ class Game:
             projectile.draw(self.screen)
 
         # ------------------- نوار بالایی (HUD Bar) -------------------
-        # نوار تیره بالای صفحه برای جداسازی کارت‌ها از زمین
         pygame.draw.rect(self.screen, (30, 50, 30), (0, 0, WIDTH, 110))
         pygame.draw.line(self.screen, (100, 100, 100), (0, 110), (WIDTH, 110), 2)
 
@@ -220,6 +224,16 @@ class Game:
         s_cost = self.card_font.render("50", True, (0, 0, 0))
         self.screen.blit(s_name, (258, 25))
         self.screen.blit(s_cost, (262, 60))
+
+        # کارت ۳: WallNut
+        w_color = (160, 82, 45) if self.selected_card and self.selected_card.plant_name == "wallnut" else (100, 50, 10)
+        pygame.draw.rect(self.screen, w_color, (320, 10, 80, 90), border_radius=6)
+        pygame.draw.rect(self.screen, (255, 255, 255), (320, 10, 80, 90), 2, border_radius=6)
+        
+        w_name = self.card_font.render("Nut", True, (255, 255, 255))
+        w_cost = self.card_font.render("50", True, (255, 255, 0))
+        self.screen.blit(w_name, (348, 25))
+        self.screen.blit(w_cost, (352, 60))
 
         # -------------------------------------------------------------
 
